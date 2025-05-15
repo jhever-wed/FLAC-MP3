@@ -2,10 +2,20 @@
 import streamlit as st
 from pydub import AudioSegment
 import io
+import shutil
 
 st.set_page_config(page_title="Audio to MP3 Converter", layout="centered")
-
 st.title("FLAC/WAV to MP3 Converter")
+
+# Check for ffmpeg
+ffmpeg_path = shutil.which("ffmpeg")
+if not ffmpeg_path:
+    st.error("FFmpeg is not installed or not in your system PATH.\n"
+             "Please install FFmpeg to enable audio conversion.")
+    st.stop()
+
+# Set converter path for pydub
+AudioSegment.converter = ffmpeg_path
 
 uploaded_file = st.file_uploader("Upload a FLAC or WAV file", type=["flac", "wav"])
 
